@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { listEmployees } from "../services/EmployeeService";
+import { useNavigate } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
   const [employee, setEmployee] = useState([]);
+  const Navigate = useNavigate();
 
   useEffect(() => {
-    listEmployees().
-    then((reponse) => {
-      setEmployee(reponse.data);
-    })
-    .catch(error=>{
+    listEmployees()
+      .then((reponse) => {
+        setEmployee(reponse.data);
+      })
+      .catch((error) => {
         console.log(error);
-    });
+      });
   }, []);
 
   return (
     <div className="container">
-      <h2 className="text-center">List of Employees</h2>
+      <h2 className="text-center mt-3">List of Employees</h2>
+      <button className="btn btn-info mb-3" onClick={()=>Navigate("/add-employee")}>
+        + Add Employee{" "}
+      </button>
       <table className="table table-striped table-bordered">
         <thead>
           <tr>
