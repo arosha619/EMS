@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { createEmployee } from "../services/EmployeeService";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { createEmployee, getEmployee } from "../services/EmployeeService";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddEmployees = () => {
   const [firstName, setFirstName] = useState("");
@@ -11,7 +11,21 @@ const AddEmployees = () => {
     lastName: "",
     email: "",
   });
+  const {id} = useParams();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if(id){
+        getEmployee(id).then((res)=>{
+            setFirstName(res.data.firstName)
+            setLastName(res.data.lastName)
+            setEmail(res.data.email)
+        }).catch((error)=>{
+            console.log(error);
+        })
+    }
+  }, [id])
+  
 
   function saveEmployee(e) {
     e.preventDefault();
@@ -59,7 +73,7 @@ const AddEmployees = () => {
     <div className="container mt-3">
       <div className="row">
         <div className="card col-md-6 offset-md-3 offset-md-3">
-          <h2 className="text-center mt-3">Add Employee</h2>
+        <h2 className="text-center mt-3">{id ? 'Update Employee' :' Add Employee' }</h2>
           <div className="card-body">
             <form>
               <div className="form-group mb-2">
@@ -95,7 +109,7 @@ const AddEmployees = () => {
                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
               </div>
               <button className="btn btn-success" onClick={saveEmployee}>
-                Submit
+                {id ? 'Update' : 'Submit'}
               </button>
             </form>
           </div>
