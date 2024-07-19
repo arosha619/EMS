@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { listEmployees } from "../services/EmployeeService";
+import { DeleteEmployee, listEmployees } from "../services/EmployeeService";
 import { useNavigate } from "react-router-dom";
 
 const ListEmployeeComponent = () => {
@@ -14,10 +14,18 @@ const ListEmployeeComponent = () => {
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [employee]);
 
   function UpdatEmployee(id){
     Navigate(`/edit-employee/${id}`)
+  }
+  function removeEmployee(id) {
+    DeleteEmployee(id).then((res)=>{
+        console.log(res.data);
+        alert("Employee Deleted Successfully !")
+    }).catch((error)=>{
+        console.log(error);
+    })
   }
 
   return (
@@ -36,14 +44,15 @@ const ListEmployeeComponent = () => {
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="table-scrollable">
           {employee.map((employee) => (
             <tr key={employee.id}>
               <td>{employee.id}</td>
               <td>{employee.firstName}</td>
               <td>{employee.lastName}</td>
               <td>{employee.email}</td>
-              <td><button className="btn btn-dark" onClick={()=>{UpdatEmployee(employee.id)}}>Update</button></td>
+              <td><button className="btn btn-dark me-2" onClick={()=>{UpdatEmployee(employee.id)}}>Update</button>
+              <button className="btn btn-danger" onClick={()=>{removeEmployee(employee.id)}}>Delete</button></td>
               
             </tr>
           ))}
